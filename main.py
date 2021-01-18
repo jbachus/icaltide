@@ -2,13 +2,14 @@ import requests
 import arrow
 import json
 import os
+import sys
 from flask import Flask, make_response, redirect
 from flask_caching import Cache
 from ics import Calendar, Event
 from timezonefinder import TimezoneFinder
 
-required_vars = ('API_KEY')
-if not all(key in os.environ for key in required_vars):
+if 'API_KEY' not in os.environ:
+    print(str(os.environ))
     print("API_KEY is required")
     sys.exit(os.EX_CONFIG)
 
