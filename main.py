@@ -9,7 +9,6 @@ from ics import Calendar, Event
 from timezonefinder import TimezoneFinder
 
 if 'API_KEY' not in os.environ:
-    print(str(os.environ))
     print("API_KEY is required")
     sys.exit(os.EX_CONFIG)
 
