@@ -3,8 +3,9 @@ import arrow
 import json
 import os
 import sys
-from flask import Flask, make_response, redirect
+from flask import Flask, make_response, redirect, url_for
 from flask_caching import Cache
+from werkzeug.middleware.proxy_fix import ProxyFix
 from ics import Calendar, Event
 from timezonefinder import TimezoneFinder
 
@@ -20,6 +21,7 @@ headers = {
 
 cache = Cache(config={"CACHE_TYPE": "simple"})
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app)
 cache.init_app(app)
 
 with app.app_context():
@@ -62,7 +64,7 @@ def build_ical(lat, lon):
     resp.headers["Cache-Control"] = "public, max-age=15552000"
     return resp
   else:
-    resp = redirect("/{:.2f}/{:.2f}".format(float(latitude),float(longitude)))
+    resp = redirect(url_for('build_ical',lat=round(float(latitude),2),lon=round(float(longitude),2)))
     resp.headers["Cache-Control"] = "public, max-age:15552000"
     return resp
 
